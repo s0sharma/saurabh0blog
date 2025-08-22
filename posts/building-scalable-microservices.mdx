@@ -1,0 +1,50 @@
+---
+title: "Building Scalable Microservices with Event-Driven Architecture"
+description: "Learn how to design and implement event-driven microservices that can scale to handle millions of requests. We'll explore patterns like CQRS, Event Sourcing, and how to handle distributed transactions effectively."
+category: "System Design"
+tags: ["microservices", "architecture", "scalability", "typescript"]
+publishedAt: "2024-12-15T00:00:00Z"
+readTime: "8 min read"
+featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600"
+---
+
+# Building Scalable Microservices with Event-Driven Architecture
+
+Event-driven architecture (EDA) is a software architecture pattern that promotes the production, detection, consumption of, and reaction to events. In the context of microservices, this pattern enables services to communicate asynchronously, reducing coupling and improving scalability.
+
+## Key Benefits
+
+Event-driven architecture provides several key advantages:
+
+- **Loose Coupling**: Services don't need to know about each other directly
+- **Scalability**: Easy to scale individual services based on demand
+- **Resilience**: Failure in one service doesn't bring down the entire system
+- **Flexibility**: Easy to add new services and modify existing ones
+
+## Implementation Example
+
+Here's a practical example of implementing an event-driven microservice using Node.js and TypeScript:
+
+```typescript
+interface OrderEvent {
+  type: 'ORDER_CREATED' | 'ORDER_UPDATED' | 'ORDER_CANCELLED';
+  orderId: string;
+  customerId: string;
+  timestamp: Date;
+  data: any;
+}
+
+class EventBus {
+  private subscribers = new Map<string, Function[]>();
+
+  subscribe(eventType: string, handler: Function) {
+    const handlers = this.subscribers.get(eventType) || [];
+    handlers.push(handler);
+    this.subscribers.set(eventType, handlers);
+  }
+
+  async publish(event: OrderEvent) {
+    const handlers = this.subscribers.get(event.type) || [];
+    await Promise.all(handlers.map(handler => handler(event)));
+  }
+}

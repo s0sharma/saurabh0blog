@@ -1,0 +1,33 @@
+---
+title: "Advanced TypeScript Patterns for Better Code Quality"
+description: "Explore advanced TypeScript features like conditional types, mapped types, and template literal types. Learn how to leverage these patterns to build more maintainable and type-safe applications."
+category: "Languages"
+tags: ["typescript", "patterns", "types", "generics"]
+publishedAt: "2024-12-10T00:00:00Z"
+readTime: "10 min read"
+featuredImage: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600"
+---
+
+# Advanced TypeScript Patterns for Better Code Quality
+
+TypeScript has evolved significantly over the years, introducing powerful type system features that enable developers to write more robust and maintainable code. In this comprehensive guide, we'll explore advanced TypeScript patterns that can elevate your code quality and developer experience.
+
+## Conditional Types
+
+Conditional types allow you to create types that depend on a condition, much like ternary operators in JavaScript but at the type level.
+
+```typescript
+// Basic conditional type
+type IsString<T> = T extends string ? true : false;
+
+type Test1 = IsString<string>; // true
+type Test2 = IsString<number>; // false
+
+// More practical example: extracting return type
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+
+function getUserData(): { id: number; name: string } {
+  return { id: 1, name: "John" };
+}
+
+type UserData = ReturnType<typeof getUserData>; // { id: number; name: string }
